@@ -32,6 +32,35 @@ func ReadTalks(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 func WriteTalks(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	w.Header().Set("Content-Type", "application/vnd.api+json")
-	response := "halo"
-	json.NewEncoder(w).Encode(response)
+	productID := r.FormValue("product_id")
+	shopID := r.FormValue("shop_id")
+	userID := r.FormValue("user_id")
+	message := r.FormValue("message")
+	productIDInt, errParse := strconv.ParseInt(productID, 10, 64)
+	if errParse != nil {
+		log.Println(errParse)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	shopIDInt, errParse := strconv.ParseInt(shopID, 10, 64)
+	if errParse != nil {
+		log.Println(errParse)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	userIDInt, errParse := strconv.ParseInt(userID, 10, 64)
+	if errParse != nil {
+		log.Println(errParse)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	err := InsertTalk(userIDInt, productIDInt, shopIDInt, message)
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	w.WriteHeader(http.StatusCreated)
+	return
 }
