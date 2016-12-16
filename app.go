@@ -10,6 +10,10 @@ import (
 	"github.com/purnaresa/training_project/talk_training"
 )
 
+func init() {
+	talk_training.InitTalk()
+}
+
 func main() {
 	log.Printf("App starting ...")
 	router := httprouter.New()
